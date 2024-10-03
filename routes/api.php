@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\RabbitMQController;
 use App\Jobs\ProcessMassage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +26,7 @@ Route::get('/send-message', function() {
 
     return 'Message send to RabbitMq';
 });
+
+// URL gửi đến client
+// Route::get('send-message', [RabbitMQController::class, 'sendMessage']);
+
