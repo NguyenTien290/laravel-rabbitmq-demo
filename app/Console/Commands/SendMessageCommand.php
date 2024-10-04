@@ -8,25 +8,18 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class SendMessageCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
+    
+    // protected $signature = 'send:message {message}';
+    // protected $description = 'Send a message to RabbitMQ';
+
+    // Sử dụng Fanout Exchange
+    // protected $signature = 'send:message {message} {routingKey}';
+    // protected $description = 'Send a message to RabbitMQ using Fanout Exchange';
+
+    // Sử dụng Fanout Exchange
     protected $signature = 'send:message {message}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Send a message to RabbitMQ';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
+    protected $description = 'Send a message to RabbitMQ using Direct Exchange';
     public function __construct()
     {
         parent::__construct();
@@ -45,11 +38,23 @@ class SendMessageCommand extends Command
 
         // $exchange = 'direct_exchange'; // Type Exchange
 
-        $channel->queue_declare('hello', false, true, false, false, false, []);
+        // Khởi tạo 1 queue và cấu hình 
+        // $channel->queue_declare('hello', false, true, false, false, false, []);
+
+        // Khai báo Direct Exchange
+        // $channel->exchange_declare('direct_logs', 'direct', false, true, false);
+
+        // Khai báo Fanout Exchange
+        $channel->exchange_declare('logs', 'fanout', false, true, false);
+    
 
         // Create Message
         $message = new AMQPMessage($this->argument('message'));
-        $channel->basic_publish($message, '', 'hello');
+
+        // Lấy routing key từ tham số
+        // $routingKey = $this->argument('routingKey');
+
+        $channel->basic_publish($message, 'logs');
 
         // Send the message to the exchange with the routing key.
         // $this->chanel->basic_publish($message, $exchange, $routingKey);
