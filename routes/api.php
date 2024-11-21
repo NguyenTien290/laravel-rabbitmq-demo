@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RabbitMQController;
 use App\Jobs\ProcessMassage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
 
 /*
@@ -21,12 +24,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/send-message', function() {
-    ProcessMassage::dispatch('Hello RabbitMq');
+Route::post('/send', [NotificationController::class, 'sendNoti']);
 
-    return 'Message send to RabbitMq';
-});
+
+// Route::get('/send-message', function() {
+//     ProcessMassage::dispatch('Hello RabbitMq');
+
+//     return 'Message send to RabbitMq';
+// });
 
 // URL gửi đến client
 // Route::get('send-message', [RabbitMQController::class, 'sendMessage']);
-
